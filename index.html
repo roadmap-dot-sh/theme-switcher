@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theme Switcher - Design Tokens</title>
+    <style>
+      /* =========================================
+       1. TOKEN LAYER (Default: Light Theme)
+       ========================================= */
+      :root {
+        --color-bg: #f3f4f6; /* Nền trang */
+        --color-surface: #ffffff; /* Nền card / control */
+        --color-text: #1f2937; /* Chữ chính */
+        --color-text-muted: #6b7280; /* Chữ phụ */
+        --color-accent: #3b82f6; /* Màu nhấn (nút, active) */
+        --color-accent-hover: #2563eb;
+        --color-border: #e5e7eb; /* Viền */
+
+        --radius-card: 16px;
+        --radius-btn: 8px;
+        --radius-sm: 6px;
+
+        --shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      }
+
+      /* =========================================
+       2. THEME VARIANTS (Ghi đè cùng tên biến)
+       ========================================= */
+      /* LIGHT THEME (Mặc định) */
+      body:has(#theme-light:checked) {
+        --color-bg: #f3f4f6;
+        --color-surface: #ffffff;
+        --color-text: #1f2937;
+        --color-text-muted: #6b7280;
+        --color-accent: #3b82f6;
+        --color-accent-hover: #2563eb;
+        --color-border: #e5e7eb;
+        --radius-card: 16px;
+        --radius-btn: 8px;
+        --radius-sm: 6px;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      }
+
+      /* DARK THEME */
+      body:has(#theme-dark:checked) {
+        --color-bg: #111827;
+        --color-surface: #1f2937;
+        --color-text: #f9fafb;
+        --color-text-muted: #9ca3af;
+        --color-accent: #3b82f6;
+        --color-accent-hover: #60a5fa;
+        --color-border: #374151;
+        --radius-card: 16px;
+        --radius-btn: 8px;
+        --radius-sm: 6px;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      }
+
+      /* CUSTOM THEME (Warm/Earthy) */
+      body:has(#theme-custom:checked) {
+        --color-bg: #fdfbf7;
+        --color-surface: #fcfaf5;
+        --color-text: #1c1917;
+        --color-text-muted: #78716c;
+        --color-accent: #059669; /* Xanh lá cây giống mockup */
+        --color-accent-hover: #047857;
+        --color-border: #e7e5e4;
+        --radius-card: 20px; /* Bo góc to hơn chút */
+        --radius-btn: 8px;
+        --radius-sm: 6px;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+      }
+
+      /* =========================================
+       3. GLOBAL RESET & BASE
+       ========================================= */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+      }
+
+      body {
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      /* =========================================
+       4. PREVIEW CARD
+       ========================================= */
+      .card {
+        background-color: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-card);
+        padding: 2rem;
+        width: 100%;
+        max-width: 380px;
+        box-shadow: var(--shadow);
+        transition: all 0.2s ease;
+      }
+
+      /* Thanh chọn theme (Segmented Control) */
+      .theme-switch {
+        display: flex;
+        background-color: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-btn);
+        padding: 4px;
+        margin-bottom: 2rem;
+        gap: 4px;
+        transition: border-color 0.2s ease;
+      }
+
+      /* Ẩn radio input nhưng vẫn giữ khả năng truy cập bàn phím */
+      .theme-switch input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      /* Nhãn (Label) cho từng lựa chọn */
+      .theme-switch label {
+        flex: 1;
+        text-align: center;
+        padding: 8px 0;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+      }
+
+      /* Trạng thái khi radio được chọn */
+      .theme-switch input[type="radio"]:checked + label {
+        background-color: var(--color-accent);
+        color: #ffffff; /* Chữ trắng nổi bật trên nền accent */
+      }
+
+      /* Focus state cho bàn phím */
+      .theme-switch input[type="radio"]:focus-visible + label {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+      }
+
+      /* Nội dung Card */
+      .card h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: var(--color-text);
+        transition: color 0.2s ease;
+      }
+
+      .card p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: var(--color-text-muted);
+        margin-bottom: 1.5rem;
+        transition: color 0.2s ease;
+      }
+
+      /* Nút bấm */
+      .btn {
+        display: inline-block;
+        background-color: var(--color-accent);
+        color: #ffffff;
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 10px 20px;
+        border-radius: var(--radius-btn);
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .btn:hover {
+        background-color: var(--color-accent-hover);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Nội dung Card (Chỉ có 1 card duy nhất, ko duplicate) -->
+    <div class="card">
+      <!-- Thanh Switcher -->
+      <div class="theme-switch" role="group" aria-label="Theme Selector">
+        <input type="radio" name="theme" id="theme-light" checked />
+        <label for="theme-light">Light</label>
+
+        <input type="radio" name="theme" id="theme-dark" />
+        <label for="theme-dark">Dark</label>
+
+        <input type="radio" name="theme" id="theme-custom" />
+        <label for="theme-custom">Custom</label>
+      </div>
+
+      <!-- Preview Content -->
+      <h2>Hello, World!</h2>
+      <p>This is a simple card that changes theme with CSS variables.</p>
+      <button class="btn">Primary Button</button>
+    </div>
+  </body>
+</html>
